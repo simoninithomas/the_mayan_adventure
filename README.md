@@ -18,7 +18,7 @@ Have fun!
 ## Companion article
 We wrote a companion article to explain how the environment works and how you can train the agent.
 
-The Article: [Sent to publication]
+The Article : https://towardsdatascience.com/unity-ml-agents-the-mayan-adventure-2e15510d653b
 
 ## Documentation
 ### Setup
