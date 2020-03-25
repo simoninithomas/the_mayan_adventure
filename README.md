@@ -4,10 +4,10 @@
 
 The Mayan Adventure is an open-source reinforcement learning environment for Unity ML-Agents.  In this environment, you train your agent (Indie) to find the golden statue in this dangerous environment full of traps.
 
-You can see the trained agent result here:
+You can see the trained agent result here: [Link to the video](https://youtu.be/kKng-vRy6bs)
 
-[VIDEO]
-
+<img src='./assets/images/WinningEpisode.gif' alt='Winning Episode' />
+  
 This environment is part of Unity ML Agents Course. A free course where you learn to create agents in Unity ML using Deep Reinforcement Learning with Tensorflow.
 
 This project is currently in beta. You can check the todo section to see what will be the future improvements.
