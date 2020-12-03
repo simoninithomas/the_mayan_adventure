@@ -1,7 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using MLAgents;
+using Random = UnityEngine.Random;
+using Unity.MLAgents;
+using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Sensors;
 
 
 public class MayanAdventureAgent : Agent
@@ -26,10 +31,10 @@ public class MayanAdventureAgent : Agent
 	/// <summary>
 	/// This function is called once when the agent wakes
 	/// </summary>
-    public override void InitializeAgent()
+    public override void Initialize()
     {
         mayanAdventureSettings = FindObjectOfType<MayanAdventureSettings>();
-    	base.InitializeAgent();
+    	base.Initialize();
     	rigidbody = GetComponent<Rigidbody>();
     	goal = area.goalGameObject;
     }
@@ -82,11 +87,21 @@ public class MayanAdventureAgent : Agent
             ForceMode.VelocityChange);
     }
 
-    public override void AgentAction(float[] vectorAction)
+    public static void DumpToConsole(object obj)
+    {
+        var output = JsonUtility.ToJson(obj, true);
+        Debug.Log(output);
+    }
+
+    public override void OnActionReceived(float[] vectorAction)
     {
         // Apply a tiny negative reward every step to encourage action
-        AddReward(-1f / maxStep);
+        AddReward(-1f / MaxStep);
         MoveAgent(vectorAction);
+
+        foreach(var action in vectorAction) {
+            Debug.Log(action);
+        }
 
         if (area.training)
         {
@@ -94,7 +109,7 @@ public class MayanAdventureAgent : Agent
             if(this.transform.position.y < 1.68f)
             {
                 SetReward(-1f);
-                Done();
+                base.EndEpisode();
             }
         }
         else if (area.training == false)
@@ -111,12 +126,12 @@ public class MayanAdventureAgent : Agent
     /// local velocity
     /// isRock Bool
     /// </summary>
-    public override void CollectObservations()
+    public override void CollectObservations(VectorSensor sensor)
     {
         var localVelocity = transform.InverseTransformDirection(this.rigidbody.velocity);
-        AddVectorObs(localVelocity.x);
-        AddVectorObs(localVelocity.z);
-        AddVectorObs(isRock);
+        sensor.AddObservation(localVelocity.x);
+        sensor.AddObservation(localVelocity.z);
+        sensor.AddObservation(isRock);
     }
 
     /// <summary>   
@@ -125,32 +140,31 @@ public class MayanAdventureAgent : Agent
     /// Behavior Type to "Heuristic Only" in the Behavior Parameters inspector.
     /// </summary>
     /// <returns>A vectorAction array of floats that will be passed into <see cref="AgentAction(float[])"/></returns>
-    public override float[] Heuristic()
+    public override void Heuristic(in ActionBuffers actionsOut)
     {
-        var action = new float[4];
+        var continuousActionsOut = actionsOut.ContinuousActions;
         if (Input.GetKey(KeyCode.D))
         {
-            action[2] = 2f;
+            continuousActionsOut[2] = 2f;
         }
         if (Input.GetKey(KeyCode.W))
         {
-            action[0] = 1f;
+            continuousActionsOut[0] = 1f;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            action[2] = 1f;
+            continuousActionsOut[2] = 1f;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            action[0] = 2f;
+            continuousActionsOut[0] = 2f;
         }
-        return action;
     }
 
     /// <summary>   
     /// Reset the agent and the area
     /// </summary>
-	public override void AgentReset()
+	public override void OnEpisodeBegin()
     {
     	area.ResetArea();
     	isRock = true;
@@ -170,7 +184,7 @@ public class MayanAdventureAgent : Agent
             if (area.training)
             {
                 SetReward(1f);
-                Done();
+                base.EndEpisode();
             }
             if (area.training == false)
             {
@@ -200,7 +214,7 @@ public class MayanAdventureAgent : Agent
             if (area.training)
             {
                 SetReward(-1f);
-                Done();
+                base.EndEpisode();
             }
                 
             if (area.training == false)
@@ -219,7 +233,7 @@ public class MayanAdventureAgent : Agent
             if (area.training)
             {
                 SetReward(-1f);
-                Done();
+                base.EndEpisode();
             }
             if (area.training == false)
             {
@@ -235,7 +249,7 @@ public class MayanAdventureAgent : Agent
             yield return new WaitForSeconds(8f);
             SetReward(1f);
             goal.SetActive(true);
-            Done();
+            base.EndEpisode();
     }
 
     /// <summary>   
@@ -261,6 +275,6 @@ public class MayanAdventureAgent : Agent
 
         this.gameObject.SetActive(false);
         SetReward(-1f);
-        Done();
+        base.EndEpisode();
     }   
 }
