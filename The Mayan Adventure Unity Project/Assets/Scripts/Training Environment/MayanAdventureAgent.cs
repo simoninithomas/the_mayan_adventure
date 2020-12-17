@@ -87,21 +87,11 @@ public class MayanAdventureAgent : Agent
             ForceMode.VelocityChange);
     }
 
-    public static void DumpToConsole(object obj)
-    {
-        var output = JsonUtility.ToJson(obj, true);
-        Debug.Log(output);
-    }
-
     public override void OnActionReceived(float[] vectorAction)
     {
         // Apply a tiny negative reward every step to encourage action
         AddReward(-1f / MaxStep);
         MoveAgent(vectorAction);
-
-        foreach(var action in vectorAction) {
-            Debug.Log(action);
-        }
 
         if (area.training)
         {
