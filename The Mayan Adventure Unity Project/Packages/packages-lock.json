@@ -56,16 +56,17 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ml-agents": {
-      "version": "file:/Users/macbook/code/deeprl/ml-agents-release_10/com.unity.ml-agents",
+      "version": "1.6.0-preview",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.unity.barracuda": "1.1.2-preview",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
         "com.unity.modules.physics": "1.0.0",
         "com.unity.modules.physics2d": "1.0.0"
-      }
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.probuilder": {
       "version": "4.2.3",
