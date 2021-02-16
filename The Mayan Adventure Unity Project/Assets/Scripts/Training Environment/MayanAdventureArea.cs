@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MLAgents;
+using Unity.MLAgents;
 
 public class MayanAdventureArea : MonoBehaviour
 {
@@ -61,7 +61,7 @@ public class MayanAdventureArea : MonoBehaviour
         } 
 
         // 2. Select the level array based on the curricula
-        float levelNumber = Academy.Instance.FloatProperties.GetPropertyWithDefault("level", 3.0f);
+        float levelNumber = Academy.Instance.EnvironmentParameters.GetWithDefault("level", 3.0f);
         GameObject[] levels_array = new GameObject[] {bigWoodBridgeLevel, fireLevel, woodBridgeLevel};
         float[] levels_size = new float[] {24.2f, 30f, 39f};
 
